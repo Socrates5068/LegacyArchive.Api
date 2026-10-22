@@ -11,8 +11,17 @@ public class AppDbContextFactory
         var optionsBuilder =
             new DbContextOptionsBuilder<AppDbContext>();
 
-        optionsBuilder.UseNpgsql(
-            "");
+        var connectionString =
+            Environment.GetEnvironmentVariable(
+                "LEGACYARCHIVE_CONNECTION_STRING");
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException(
+                "LEGACYARCHIVE_CONNECTION_STRING no configurada.");
+        }
+
+        optionsBuilder.UseNpgsql(connectionString);
 
         return new AppDbContext(optionsBuilder.Options);
     }
