@@ -364,3 +364,11 @@ FodyWeavers.xsd
 
 # Environment variable files
 .env
+
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore appsettings files
+appsettings.Development.json
+secrets.json
