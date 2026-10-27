@@ -28,8 +28,13 @@ namespace LegacyArchive.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -42,6 +47,8 @@ namespace LegacyArchive.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Artworks");
                 });
@@ -59,6 +66,22 @@ namespace LegacyArchive.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("LegacyArchive.Domain.Entities.Artwork", b =>
+                {
+                    b.HasOne("LegacyArchive.Domain.Entities.Category", "Category")
+                        .WithMany("Artworks")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("LegacyArchive.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Artworks");
                 });
 #pragma warning restore 612, 618
         }

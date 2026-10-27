@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/artworks/8d2e01cb-5648-4c54-8945-f75b3f941439"
+method: GET
+order: 1563

@@ -1,0 +1,15 @@
+$kind: http-request
+order: 3000
+method: POST
+url: "{{baseUrl}}/api/artworks"
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "My Artwork",
+      "description": "A description of the artwork",
+      "year": 2026,
+      "categoryId": "91733bdf-2ea8-485f-8222-b10e85255403"
+    }

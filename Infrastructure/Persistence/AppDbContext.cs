@@ -11,6 +11,16 @@ public class AppDbContext : DbContext
     {
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Artwork>()
+            .Property(a => a.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+            .ValueGeneratedOnAdd();
+
+        base.OnModelCreating(modelBuilder);
+    }
+
     public DbSet<Artwork> Artworks => Set<Artwork>();
 
     public DbSet<Category> Categories => Set<Category>();

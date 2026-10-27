@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace LegacyArchive.Infrastructure.Persistence;
 
@@ -8,18 +9,23 @@ public class AppDbContextFactory
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder =
-            new DbContextOptionsBuilder<AppDbContext>();
+        var configuration = new ConfigurationBuilder()
+            .AddUserSecrets(
+                "41f3e6cf-e822-4e94-9286-f43003d5606e")
+            .Build();
 
         var connectionString =
-            Environment.GetEnvironmentVariable(
-                "LEGACYARCHIVE_CONNECTION_STRING");
+            configuration.GetConnectionString(
+                "DefaultConnection");
 
         if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidOperationException(
-                "LEGACYARCHIVE_CONNECTION_STRING no configurada.");
+                "ConnectionStrings:DefaultConnection no configurada.");
         }
+
+        var optionsBuilder =
+            new DbContextOptionsBuilder<AppDbContext>();
 
         optionsBuilder.UseNpgsql(connectionString);
 

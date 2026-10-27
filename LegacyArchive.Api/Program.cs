@@ -1,4 +1,7 @@
+using Application.Interfaces;
+using Application.Services;
 using LegacyArchive.Infrastructure.Persistence;
+using LegacyArchive.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LegacyArchive.Api
@@ -21,6 +24,8 @@ namespace LegacyArchive.Api
                             "DefaultConnection"));
                 });
 
+            builder.Services.AddScoped<IArtworkRepository, ArtworkRepository>();
+            builder.Services.AddScoped<ArtworkService>();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 

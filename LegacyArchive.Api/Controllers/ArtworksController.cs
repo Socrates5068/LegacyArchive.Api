@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.DTOs;
+using Application.Services;
 using LegacyArchive.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LegacyArchive.Api.Controllers;
 
@@ -7,6 +9,13 @@ namespace LegacyArchive.Api.Controllers;
 [Route("api/[controller]")]
 public class ArtworksController : ControllerBase
 {
+    private readonly ArtworkService _artworkService;
+
+    public ArtworksController(ArtworkService artworkService)
+    {
+        _artworkService = artworkService;
+    }
+
     [HttpGet]
     public IActionResult Get()
     {
@@ -20,5 +29,25 @@ public class ArtworksController : ControllerBase
         };
 
         return Ok(artwork);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var artwork = await _artworkService.GetByIdAsync(id);
+
+        if (artwork is null)
+            return NotFound();
+
+        return Ok(artwork);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(
+        CreateArtworkRequest request)
+    {
+        var createdArtwork = await _artworkService.CreateAsync(request);
+
+        return Ok(createdArtwork);
     }
 }
