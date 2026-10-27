@@ -25,7 +25,7 @@ namespace LegacyArchive.Api
                 });
 
             builder.Services.AddScoped<IArtworkRepository, ArtworkRepository>();
-            builder.Services.AddScoped<ArtworkService>();
+            builder.Services.AddScoped<IArtworkService, ArtworkService>();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 

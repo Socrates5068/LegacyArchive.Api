@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Interfaces;
 using Application.Services;
 using LegacyArchive.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -9,26 +10,11 @@ namespace LegacyArchive.Api.Controllers;
 [Route("api/[controller]")]
 public class ArtworksController : ControllerBase
 {
-    private readonly ArtworkService _artworkService;
+    private readonly IArtworkService _artworkService;
 
-    public ArtworksController(ArtworkService artworkService)
+    public ArtworksController(IArtworkService artworkService)
     {
         _artworkService = artworkService;
-    }
-
-    [HttpGet]
-    public IActionResult Get()
-    {
-        var artwork = new Artwork
-        {
-            Id = Guid.NewGuid(),
-            Title = "El Primer Comic",
-            Description = "Prueba del sistema",
-            Year = 2026,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        return Ok(artwork);
     }
 
     [HttpGet("{id:guid}")]
@@ -49,5 +35,14 @@ public class ArtworksController : ControllerBase
         var createdArtwork = await _artworkService.CreateAsync(request);
 
         return Ok(createdArtwork);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var artworks =
+            await _artworkService.GetAllAsync();
+
+        return Ok(artworks);
     }
 }

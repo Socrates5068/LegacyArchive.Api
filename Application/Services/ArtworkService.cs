@@ -5,7 +5,7 @@ using LegacyArchive.Domain.Entities;
 
 namespace Application.Services;
 
-public class ArtworkService
+public class ArtworkService : IArtworkService
 {
     private readonly IArtworkRepository _repository;
 
@@ -34,8 +34,8 @@ public class ArtworkService
             Title = createdArtwork.Title,
             Description = createdArtwork.Description,
             Year = createdArtwork.Year,
-            CategoryId = createdArtwork.CategoryId,
-            CreatedAt = createdArtwork.CreatedAt
+            CreatedAt = createdArtwork.CreatedAt,
+            CategoryId = createdArtwork.CategoryId
         };
     }
 
@@ -55,5 +55,20 @@ public class ArtworkService
             Description = artwork.Description,
             CreatedAt = artwork.CreatedAt
         };
+    }
+
+    public async Task<List<ArtworkResponse>> GetAllAsync()
+    {
+        var artworks = await _repository.GetAllAsync();
+
+        return artworks.Select(a => new ArtworkResponse
+        {
+            Id = a.Id,
+            Title = a.Title,
+            Description = a.Description,
+            Year = a.Year,
+            CreatedAt = a.CreatedAt,
+            CategoryId = a.CategoryId
+        }).ToList();
     }
 }
