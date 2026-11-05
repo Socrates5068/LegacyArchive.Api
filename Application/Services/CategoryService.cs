@@ -31,10 +31,24 @@ public class CategoryService
                 request.Name);
         }
 
+        var categoryName = request.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(categoryName))
+        {
+            throw new InvalidOperationException(
+                "Category name cannot be empty.");
+        }
+
         var category = new Category
         {
             Name = request.Name
         };
+
+        if (await _repository.NameExistsAsync(categoryName))
+        {
+            throw new CategoryAlreadyExistsException(
+                categoryName);
+        }
 
         var created =
             await _repository.AddAsync(category);

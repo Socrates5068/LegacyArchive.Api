@@ -47,7 +47,7 @@ public class ExceptionMiddleware
                 StatusCodes.Status404NotFound,
 
             CategoryAlreadyExistsException =>
-                StatusCodes.Status400BadRequest,
+                StatusCodes.Status409Conflict,
 
             _ =>
                 StatusCodes.Status500InternalServerError

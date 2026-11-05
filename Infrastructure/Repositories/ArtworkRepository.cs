@@ -27,11 +27,14 @@ public class ArtworkRepository : IArtworkRepository
     public async Task<Artwork?> GetByIdAsync(Guid id)
     {
         return await _context.Artworks
+            .Include(a => a.Category)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<List<Artwork>> GetAllAsync()
     {
-        return await _context.Artworks.ToListAsync();
+        return await _context.Artworks
+            .Include(a => a.Category)
+            .ToListAsync();
     }
 }

@@ -46,9 +46,11 @@ public class CategoryRepository : ICategoryRepository
     }
 
     public async Task<bool> NameExistsAsync(
-        string name)
+    string name)
     {
         return await _context.Categories
-            .AnyAsync(c => c.Name == name);
+            .AnyAsync(c =>
+                c.Name.ToLower() ==
+                name.ToLower());
     }
 }

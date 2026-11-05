@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/categories"
+method: POST
+body:
+  type: json
+  content: "{\r\n  \"name\": \"Comic\"\r\n}"
+order: 3000

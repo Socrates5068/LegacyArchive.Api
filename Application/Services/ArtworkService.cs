@@ -49,7 +49,12 @@ public class ArtworkService : IArtworkService
             Description = createdArtwork.Description,
             Year = createdArtwork.Year,
             CreatedAt = createdArtwork.CreatedAt,
-            CategoryId = createdArtwork.CategoryId
+
+            Category = new CategoryDto
+            {
+                Id = artwork.Category.Id,
+                Name = artwork.Category.Name
+            },
         };
     }
 
@@ -69,7 +74,11 @@ public class ArtworkService : IArtworkService
             Description = artwork.Description,
             Year = artwork.Year,
             CreatedAt = artwork.CreatedAt,
-            CategoryId = artwork.CategoryId
+            Category = new CategoryDto
+            {
+                Id = artwork.Category.Id,
+                Name = artwork.Category.Name
+            },
         };
     }
 
@@ -84,7 +93,12 @@ public class ArtworkService : IArtworkService
             Description = a.Description,
             Year = a.Year,
             CreatedAt = a.CreatedAt,
-            CategoryId = a.CategoryId
+
+            Category = new CategoryDto
+            {
+                Id = a.Category.Id,
+                Name = a.Category.Name
+            },
         }).ToList();
     }
 }
