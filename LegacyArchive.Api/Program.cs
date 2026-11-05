@@ -1,5 +1,7 @@
 using Application.Interfaces;
 using Application.Services;
+using Infrastructure.Repositories;
+using LegacyArchive.Api.Middleware;
 using LegacyArchive.Infrastructure.Persistence;
 using LegacyArchive.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +46,7 @@ namespace LegacyArchive.Api
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.MapControllers();
 

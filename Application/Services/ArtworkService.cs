@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Responses;
+using Application.Exceptions;
 using Application.Interfaces;
 using LegacyArchive.Domain.Entities;
 
@@ -27,8 +28,7 @@ public class ArtworkService : IArtworkService
 
         if (!categoryExists)
         {
-            throw new Exception(
-                "Category not found");
+            throw new CategoryNotFoundException(request.CategoryId);
         }
 
         var artwork = new Artwork
@@ -67,7 +67,9 @@ public class ArtworkService : IArtworkService
             Id = artwork.Id,
             Title = artwork.Title,
             Description = artwork.Description,
-            CreatedAt = artwork.CreatedAt
+            Year = artwork.Year,
+            CreatedAt = artwork.CreatedAt,
+            CategoryId = artwork.CategoryId
         };
     }
 
