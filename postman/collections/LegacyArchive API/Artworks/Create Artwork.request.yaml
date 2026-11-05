@@ -8,7 +8,7 @@ body:
   type: json
   content: |-
     {
-      "title": "My Artwork",
+      "title": "My Artwork 5",
       "description": "A description of the artwork",
       "year": 2026,
       "categoryId": "91733bdf-2ea8-485f-8222-b10e85255403"

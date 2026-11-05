@@ -15,7 +15,7 @@ public class ArtworkService : IArtworkService
     }
 
     public async Task<ArtworkResponse> CreateAsync(
-    CreateArtworkRequest request)
+        CreateArtworkRequest request)
     {
         var artwork = new Artwork
         {
