@@ -8,15 +8,29 @@ namespace Application.Services;
 public class ArtworkService : IArtworkService
 {
     private readonly IArtworkRepository _repository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public ArtworkService(IArtworkRepository repository)
+    public ArtworkService(
+        IArtworkRepository repository,
+        ICategoryRepository categoryRepository)
     {
         _repository = repository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<ArtworkResponse> CreateAsync(
         CreateArtworkRequest request)
     {
+        var categoryExists =
+            await _categoryRepository.ExistsAsync(
+                request.CategoryId);
+
+        if (!categoryExists)
+        {
+            throw new Exception(
+                "Category not found");
+        }
+
         var artwork = new Artwork
         {
             Title = request.Title,
