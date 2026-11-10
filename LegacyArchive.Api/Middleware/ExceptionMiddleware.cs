@@ -44,6 +44,9 @@ public class ExceptionMiddleware
             CategoryAlreadyExistsException =>
                 StatusCodes.Status409Conflict,
 
+            CategoryInUseException =>
+                StatusCodes.Status409Conflict,
+
             _ =>
                 StatusCodes.Status500InternalServerError
         };

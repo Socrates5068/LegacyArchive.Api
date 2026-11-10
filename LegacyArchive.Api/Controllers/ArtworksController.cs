@@ -46,4 +46,18 @@ public class ArtworksController : ControllerBase
 
         return Ok(artworks);
     }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, UpdateArtworkRequest request)
+    {
+        var updated = await _artworkService.UpdateAsync(id, request);
+        return Ok(updated);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _artworkService.DeleteAsync(id);
+        return NoContent();
+    }
 }

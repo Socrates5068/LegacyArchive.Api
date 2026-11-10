@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/api/artworks/01a1bd91-7a2a-7246-9396-05554bd56088"
+method: DELETE
+order: 5000

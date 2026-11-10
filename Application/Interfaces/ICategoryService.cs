@@ -11,4 +11,9 @@ public interface ICategoryService
     Task<CategoryResponse?> GetByIdAsync(Guid id);
 
     Task<List<CategoryResponse>> GetAllAsync();
+
+    Task<CategoryResponse> UpdateAsync(
+        Guid id, UpdateCategoryRequest request);
+
+    Task DeleteAsync(Guid id);
 }

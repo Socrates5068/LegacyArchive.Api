@@ -37,4 +37,15 @@ public class ArtworkRepository : IArtworkRepository
             .Include(a => a.Category)
             .ToListAsync();
     }
+
+    public async Task UpdateAsync(Artwork artwork)
+    {
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Artwork artwork)
+    {
+        _context.Artworks.Remove(artwork);
+        await _context.SaveChangesAsync();
+    }
 }

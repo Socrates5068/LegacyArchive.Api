@@ -61,4 +61,40 @@ public class CategoryService
 
         return categories.Select(c => c.ToResponse()).ToList();
     }
+
+    public async Task<CategoryResponse> UpdateAsync(
+        Guid id, UpdateCategoryRequest request)
+    {
+        var category = await _repository.GetByIdAsync(id)
+            ?? throw new CategoryNotFoundException(id);
+
+        var newName = request.Name.Trim();
+
+        if (string.IsNullOrWhiteSpace(newName))
+        {
+            throw new InvalidOperationException(
+                "Category name cannot be empty.");
+        }
+
+        if (await _repository.NameExistsAsync(newName, id))
+            throw new CategoryAlreadyExistsException(newName);
+
+        category.Name = newName;
+
+        await _repository.UpdateAsync(category);
+
+        return category.ToResponse();
+    }
+
+    public async Task DeleteAsync(
+        Guid id)
+    {
+        var category = await _repository.GetByIdAsync(id)
+            ?? throw new CategoryNotFoundException(id);
+
+        if (await _repository.HasArtworksAsync(id))
+            throw new CategoryInUseException(id);
+
+        await _repository.DeleteAsync(category);
+    }
 }

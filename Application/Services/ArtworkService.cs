@@ -53,4 +53,34 @@ public class ArtworkService : IArtworkService
 
         return artworks.Select(a => a.ToResponse()).ToList();
     }
+
+    public async Task<ArtworkResponse> UpdateAsync(Guid id, UpdateArtworkRequest request)
+    {
+        var artwork = await _repository.GetByIdAsync(id)
+            ?? throw new ArtworkNotFoundException(id);
+
+        if (artwork.CategoryId != request.CategoryId)
+        {
+            var category = await _categoryRepository.GetByIdAsync(request.CategoryId)
+                ?? throw new CategoryNotFoundException(request.CategoryId);
+
+            artwork.Category = category;
+        }
+
+        artwork.Title = request.Title;
+        artwork.Description = request.Description;
+        artwork.Year = request.Year;
+
+        await _repository.UpdateAsync(artwork);
+
+        return artwork.ToResponse();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var artwork = await _repository.GetByIdAsync(id)
+            ?? throw new ArtworkNotFoundException(id);
+
+        await _repository.DeleteAsync(artwork);
+    }
 }

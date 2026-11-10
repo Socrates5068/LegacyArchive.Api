@@ -9,4 +9,6 @@ public interface IArtworkRepository
     Task<Artwork?> GetByIdAsync(Guid id);
 
     Task<List<Artwork>> GetAllAsync();
+    Task UpdateAsync(Artwork artwork);
+    Task DeleteAsync(Artwork artwork);
 }

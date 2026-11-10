@@ -18,6 +18,12 @@ public class AppDbContext : DbContext
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
             .ValueGeneratedOnAdd();
 
+        modelBuilder.Entity<Artwork>()
+            .HasOne(a => a.Category)
+            .WithMany(c => c.Artworks)
+            .HasForeignKey(a => a.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         base.OnModelCreating(modelBuilder);
     }
 

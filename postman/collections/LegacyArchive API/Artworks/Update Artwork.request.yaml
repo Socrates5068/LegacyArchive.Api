@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/artworks/01a1bd91-7a2a-7246-9396-05554bd56088"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"description\": \"new description\",\r
+
+    \    \"year\": \"2026\",\r
+
+    \    \"title\": \"My Artwork update\",\r
+
+    \    \"CategoryId\": \"c46643e4-7708-42be-bd20-8a63d2f9d7e5\"\r
+
+    }"
+order: 4000

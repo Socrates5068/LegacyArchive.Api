@@ -73,7 +73,7 @@ namespace LegacyArchive.Infrastructure.Migrations
                     b.HasOne("LegacyArchive.Domain.Entities.Category", "Category")
                         .WithMany("Artworks")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");

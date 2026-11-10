@@ -11,4 +11,8 @@ public interface IArtworkService
     Task<ArtworkResponse?> GetByIdAsync(Guid id);
 
     Task<List<ArtworkResponse>> GetAllAsync();
+
+    Task<ArtworkResponse> UpdateAsync(Guid id, UpdateArtworkRequest request);
+
+    Task DeleteAsync(Guid id);
 }

@@ -51,4 +51,21 @@ public class CategoriesController : ControllerBase
 
         return Ok(category);
     }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(
+        Guid id, UpdateCategoryRequest request)
+    {
+        var updated =
+            await _categoryService.UpdateAsync(id, request);
+        return Ok(updated);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(
+        Guid id)
+    {
+        await _categoryService.DeleteAsync(id);
+        return NoContent();
+    }
 }
