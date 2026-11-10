@@ -1,7 +1,6 @@
-using Application.Interfaces;
-using Application.Services;
-using Infrastructure.Repositories;
 using LegacyArchive.Api.Middleware;
+using LegacyArchive.Application.Interfaces;
+using LegacyArchive.Application.Services;
 using LegacyArchive.Infrastructure.Persistence;
 using LegacyArchive.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +27,6 @@ namespace LegacyArchive.Api
 
             builder.Services.AddScoped<IArtworkRepository, ArtworkRepository>();
             builder.Services.AddScoped<IArtworkService, ArtworkService>();
-            builder.Services.AddScoped<IArtworkRepository, ArtworkRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
 
@@ -43,11 +41,11 @@ namespace LegacyArchive.Api
                 app.MapOpenApi();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
-            app.UseMiddleware<ExceptionMiddleware>();
 
             app.MapControllers();
 

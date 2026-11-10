@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyArchive.Domain", "Leg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyArchive.Infrastructure", "Infrastructure\LegacyArchive.Infrastructure.csproj", "{64D81CA8-6A4F-49BA-B0D0-371C8CF1EAC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{31734105-C236-4EFB-9511-F0A523ABF95A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyArchive.Application", "Application\LegacyArchive.Application.csproj", "{31734105-C236-4EFB-9511-F0A523ABF95A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿namespace Application.Exceptions;
+﻿namespace LegacyArchive.Application.Exceptions;
 
 public class ArtworkNotFoundException : Exception
 {

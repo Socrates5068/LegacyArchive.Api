@@ -1,11 +1,11 @@
-﻿using Application.DTOs;
-using Application.DTOs.Responses;
-using Application.Interfaces;
+﻿using LegacyArchive.Application.DTOs;
+using LegacyArchive.Application.DTOs.Responses;
+using LegacyArchive.Application.Exceptions;
+using LegacyArchive.Application.Interfaces;
+using LegacyArchive.Application.Mappings;
 using LegacyArchive.Domain.Entities;
 
-using static Application.Exceptions.CategoryNotFoundException;
-
-namespace Application.Services;
+namespace LegacyArchive.Application.Services;
 
 public class CategoryService
     : ICategoryService
@@ -21,16 +21,6 @@ public class CategoryService
     public async Task<CategoryResponse> CreateAsync(
         CreateCategoryRequest request)
     {
-        var exists =
-            await _repository.NameExistsAsync(
-                request.Name);
-
-        if (exists)
-        {
-            throw new CategoryAlreadyExistsException(
-                request.Name);
-        }
-
         var categoryName = request.Name.Trim();
 
         if (string.IsNullOrWhiteSpace(categoryName))
@@ -39,41 +29,29 @@ public class CategoryService
                 "Category name cannot be empty.");
         }
 
-        var category = new Category
-        {
-            Name = request.Name
-        };
-
         if (await _repository.NameExistsAsync(categoryName))
         {
             throw new CategoryAlreadyExistsException(
                 categoryName);
         }
 
+        var category = new Category
+        {
+            Name = categoryName
+        };
+
         var created =
             await _repository.AddAsync(category);
 
-        return new CategoryResponse
-        {
-            Id = created.Id,
-            Name = created.Name
-        };
+        return created.ToResponse();
     }
 
     public async Task<CategoryResponse?> GetByIdAsync(
         Guid id)
     {
-        var category =
-            await _repository.GetByIdAsync(id);
+        var category = await _repository.GetByIdAsync(id);
 
-        if (category is null)
-            return null;
-
-        return new CategoryResponse
-        {
-            Id = category.Id,
-            Name = category.Name
-        };
+        return category?.ToResponse();
     }
 
     public async Task<List<CategoryResponse>> GetAllAsync()
@@ -81,12 +59,6 @@ public class CategoryService
         var categories =
             await _repository.GetAllAsync();
 
-        return categories
-            .Select(c => new CategoryResponse
-            {
-                Id = c.Id,
-                Name = c.Name
-            })
-            .ToList();
+        return categories.Select(c => c.ToResponse()).ToList();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Responses;
+﻿namespace LegacyArchive.Application.DTOs.Responses;
 
 public class CategoryResponse
 {

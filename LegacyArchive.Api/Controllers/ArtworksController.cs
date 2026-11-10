@@ -1,7 +1,5 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
-using Application.Services;
-using LegacyArchive.Domain.Entities;
+﻿using LegacyArchive.Application.DTOs;
+using LegacyArchive.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LegacyArchive.Api.Controllers;
@@ -34,7 +32,10 @@ public class ArtworksController : ControllerBase
     {
         var createdArtwork = await _artworkService.CreateAsync(request);
 
-        return Ok(createdArtwork);
+        return CreatedAtAction(
+        nameof(GetById),
+        new { id = createdArtwork.Id },
+        createdArtwork);
     }
 
     [HttpGet]

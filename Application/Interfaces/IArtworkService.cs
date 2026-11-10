@@ -1,7 +1,7 @@
-﻿using Application.DTOs;
-using Application.DTOs.Responses;
+﻿using LegacyArchive.Application.DTOs;
+using LegacyArchive.Application.DTOs.Responses;
 
-namespace Application.Interfaces;
+namespace LegacyArchive.Application.Interfaces;
 
 public interface IArtworkService
 {

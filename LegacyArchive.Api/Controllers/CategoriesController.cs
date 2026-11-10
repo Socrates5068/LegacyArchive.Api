@@ -1,5 +1,5 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
+﻿using LegacyArchive.Application.DTOs;
+using LegacyArchive.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LegacyArchive.Api.Controllers;
@@ -23,8 +23,11 @@ public class CategoriesController : ControllerBase
         var category =
             await _categoryService.CreateAsync(
                 request);
-
-        return Ok(category);
+        
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = category.Id },
+            category);
     }
 
     [HttpGet]

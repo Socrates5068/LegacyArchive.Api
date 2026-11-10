@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTOs;
+namespace LegacyArchive.Application.DTOs;
 
 public class CreateArtworkRequest
 {

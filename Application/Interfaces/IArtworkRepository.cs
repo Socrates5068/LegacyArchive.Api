@@ -1,6 +1,6 @@
 ﻿using LegacyArchive.Domain.Entities;
 
-namespace Application.Interfaces;
+namespace LegacyArchive.Application.Interfaces;
 
 public interface IArtworkRepository
 {

@@ -1,10 +1,11 @@
-﻿using Application.DTOs;
-using Application.DTOs.Responses;
-using Application.Exceptions;
-using Application.Interfaces;
+﻿using LegacyArchive.Application.Mappings;
+using LegacyArchive.Application.DTOs;
+using LegacyArchive.Application.DTOs.Responses;
+using LegacyArchive.Application.Exceptions;
+using LegacyArchive.Application.Interfaces;
 using LegacyArchive.Domain.Entities;
 
-namespace Application.Services;
+namespace LegacyArchive.Application.Services;
 
 public class ArtworkService : IArtworkService
 {
@@ -22,83 +23,34 @@ public class ArtworkService : IArtworkService
     public async Task<ArtworkResponse> CreateAsync(
         CreateArtworkRequest request)
     {
-        var categoryExists =
-            await _categoryRepository.ExistsAsync(
-                request.CategoryId);
-
-        if (!categoryExists)
-        {
-            throw new CategoryNotFoundException(request.CategoryId);
-        }
+        var category = await _categoryRepository.GetByIdAsync(request.CategoryId)
+            ?? throw new CategoryNotFoundException(request.CategoryId);
 
         var artwork = new Artwork
         {
             Title = request.Title,
             Description = request.Description,
             Year = request.Year,
-            CategoryId = request.CategoryId,
+            Category = category
         };
 
-        var createdArtwork =
-            await _repository.AddAsync(artwork);
+        var created = await _repository.AddAsync(artwork);
 
-        return new ArtworkResponse
-        {
-            Id = createdArtwork.Id,
-            Title = createdArtwork.Title,
-            Description = createdArtwork.Description,
-            Year = createdArtwork.Year,
-            CreatedAt = createdArtwork.CreatedAt,
-
-            Category = new CategoryDto
-            {
-                Id = artwork.Category.Id,
-                Name = artwork.Category.Name
-            },
-        };
+        return created.ToResponse();
     }
 
 
     public async Task<ArtworkResponse?> GetByIdAsync(Guid id)
     {
-        var artwork =
-            await _repository.GetByIdAsync(id);
+        var artwork = await _repository.GetByIdAsync(id);
 
-        if (artwork is null)
-            return null;
-
-        return new ArtworkResponse
-        {
-            Id = artwork.Id,
-            Title = artwork.Title,
-            Description = artwork.Description,
-            Year = artwork.Year,
-            CreatedAt = artwork.CreatedAt,
-            Category = new CategoryDto
-            {
-                Id = artwork.Category.Id,
-                Name = artwork.Category.Name
-            },
-        };
+        return artwork?.ToResponse();
     }
 
     public async Task<List<ArtworkResponse>> GetAllAsync()
     {
         var artworks = await _repository.GetAllAsync();
 
-        return artworks.Select(a => new ArtworkResponse
-        {
-            Id = a.Id,
-            Title = a.Title,
-            Description = a.Description,
-            Year = a.Year,
-            CreatedAt = a.CreatedAt,
-
-            Category = new CategoryDto
-            {
-                Id = a.Category.Id,
-                Name = a.Category.Name
-            },
-        }).ToList();
+        return artworks.Select(a => a.ToResponse()).ToList();
     }
 }

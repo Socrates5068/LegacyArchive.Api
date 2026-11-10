@@ -1,19 +1,17 @@
-﻿using Application.Exceptions;
-using Microsoft.AspNetCore.Http;
+﻿using LegacyArchive.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using static Application.Exceptions.CategoryNotFoundException;
 
 namespace LegacyArchive.Api.Middleware;
 
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionMiddleware> _logger;
 
-    public ExceptionMiddleware(
-        RequestDelegate next)
+    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(
@@ -31,13 +29,10 @@ public class ExceptionMiddleware
         }
     }
 
-    private static async Task HandleExceptionAsync(
+    private async Task HandleExceptionAsync(
         HttpContext context,
         Exception exception)
     {
-        context.Response.ContentType =
-            "application/json";
-
         var statusCode = exception switch
         {
             CategoryNotFoundException =>
@@ -53,15 +48,17 @@ public class ExceptionMiddleware
                 StatusCodes.Status500InternalServerError
         };
 
-        ProblemDetails problemDetails = new()
+        if (statusCode == StatusCodes.Status500InternalServerError)
+            _logger.LogError(exception, "Unhandled exception");
+
+        var problemDetails = new ProblemDetails
         {
             Title = "An error occurred",
-            Detail = exception.Message,
+            Detail = statusCode == 500 ? "An unexpected error occurred." : exception.Message,
             Status = statusCode,
-            Type = exception.GetType().Name
         };
 
-        await context.Response.WriteAsync(
-            JsonSerializer.Serialize(problemDetails));
+        context.Response.StatusCode = statusCode;
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using LegacyArchive.Application.Interfaces;
 using LegacyArchive.Domain.Entities;
 using LegacyArchive.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
