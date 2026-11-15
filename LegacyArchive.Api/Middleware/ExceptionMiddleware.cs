@@ -1,4 +1,5 @@
-﻿using LegacyArchive.Application.Exceptions;
+﻿using FluentValidation;
+using LegacyArchive.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LegacyArchive.Api.Middleware;
@@ -33,6 +34,23 @@ public class ExceptionMiddleware
         HttpContext context,
         Exception exception)
     {
+        if (exception is ValidationException validationException)
+        {
+            var errors = validationException.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray());
+
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsJsonAsync(new ValidationProblemDetails(errors)
+            {
+                Title = "Validation failed",
+                Status = StatusCodes.Status400BadRequest
+            });
+            return;
+        }
+
         var statusCode = exception switch
         {
             CategoryNotFoundException =>

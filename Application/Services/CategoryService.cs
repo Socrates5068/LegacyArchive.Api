@@ -1,4 +1,5 @@
-﻿using LegacyArchive.Application.DTOs;
+﻿using FluentValidation;
+using LegacyArchive.Application.DTOs;
 using LegacyArchive.Application.DTOs.Responses;
 using LegacyArchive.Application.Exceptions;
 using LegacyArchive.Application.Interfaces;
@@ -11,23 +12,25 @@ public class CategoryService
     : ICategoryService
 {
     private readonly ICategoryRepository _repository;
+    private readonly IValidator<CreateCategoryRequest> _createValidator;
+    private readonly IValidator<UpdateCategoryRequest> _updateValidator;
 
     public CategoryService(
-        ICategoryRepository repository)
+        ICategoryRepository repository,
+        IValidator<CreateCategoryRequest> createValidator,
+        IValidator<UpdateCategoryRequest> updateValidator)
     {
         _repository = repository;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     public async Task<CategoryResponse> CreateAsync(
         CreateCategoryRequest request)
     {
-        var categoryName = request.Name.Trim();
+        await _createValidator.ValidateAndThrowAsync(request);
 
-        if (string.IsNullOrWhiteSpace(categoryName))
-        {
-            throw new InvalidOperationException(
-                "Category name cannot be empty.");
-        }
+        var categoryName = request.Name.Trim();
 
         if (await _repository.NameExistsAsync(categoryName))
         {
@@ -65,16 +68,12 @@ public class CategoryService
     public async Task<CategoryResponse> UpdateAsync(
         Guid id, UpdateCategoryRequest request)
     {
+        await _updateValidator.ValidateAndThrowAsync(request);
+
         var category = await _repository.GetByIdAsync(id)
             ?? throw new CategoryNotFoundException(id);
 
         var newName = request.Name.Trim();
-
-        if (string.IsNullOrWhiteSpace(newName))
-        {
-            throw new InvalidOperationException(
-                "Category name cannot be empty.");
-        }
 
         if (await _repository.NameExistsAsync(newName, id))
             throw new CategoryAlreadyExistsException(newName);

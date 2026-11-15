@@ -1,6 +1,8 @@
+using FluentValidation;
 using LegacyArchive.Api.Middleware;
 using LegacyArchive.Application.Interfaces;
 using LegacyArchive.Application.Services;
+using LegacyArchive.Application.Validators;
 using LegacyArchive.Infrastructure.Persistence;
 using LegacyArchive.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,7 @@ namespace LegacyArchive.Api
             builder.Services.AddScoped<IArtworkService, ArtworkService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryRequestValidator>();
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
