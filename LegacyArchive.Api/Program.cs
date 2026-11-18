@@ -1,11 +1,6 @@
-using FluentValidation;
 using LegacyArchive.Api.Middleware;
-using LegacyArchive.Application.Interfaces;
-using LegacyArchive.Application.Services;
-using LegacyArchive.Application.Validators;
-using LegacyArchive.Infrastructure.Persistence;
-using LegacyArchive.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+using LegacyArchive.Application;
+using LegacyArchive.Infrastructure;
 
 namespace LegacyArchive.Api
 {
@@ -19,19 +14,7 @@ namespace LegacyArchive.Api
 
             builder.Services.AddControllers();
 
-            builder.Services.AddDbContext<AppDbContext>(
-                options =>
-                {
-                    options.UseNpgsql(
-                        builder.Configuration.GetConnectionString(
-                            "DefaultConnection"));
-                });
-
-            builder.Services.AddScoped<IArtworkRepository, ArtworkRepository>();
-            builder.Services.AddScoped<IArtworkService, ArtworkService>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryRequestValidator>();
+            builder.Services.AddApplication().AddInfrastructure(builder.Configuration);
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();

@@ -1,7 +1,7 @@
 $kind: http-request
-url: "{{baseUrl}}/api/categories/c97e60b6-eb6e-4972-a8a4-16f35c78aa9f"
+url: "{{baseUrl}}/api/categories/91733bdf-2ea8-485f-8222-b10e85255403"
 method: PUT
 body:
   type: json
-  content: "{\r\n    \"name\": \"pintura\"\r\n}"
+  content: "{\r\n    \"name\": \"Comics\"\r\n}"
 order: 4000
