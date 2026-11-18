@@ -10,7 +10,7 @@ public interface IArtworkService
 
     Task<ArtworkResponse?> GetByIdAsync(Guid id);
 
-    Task<List<ArtworkResponse>> GetAllAsync();
+    Task<PagedResponse<ArtworkResponse>> GetAllAsync(PaginationQuery query);
 
     Task<ArtworkResponse> UpdateAsync(Guid id, UpdateArtworkRequest request);
 

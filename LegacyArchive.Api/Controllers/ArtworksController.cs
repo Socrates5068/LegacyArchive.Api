@@ -39,12 +39,10 @@ public class ArtworksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] PaginationQuery query)
     {
-        var artworks =
-            await _artworkService.GetAllAsync();
-
-        return Ok(artworks);
+        var result = await _artworkService.GetAllAsync(query);
+        return Ok(result);
     }
 
     [HttpPut("{id:guid}")]

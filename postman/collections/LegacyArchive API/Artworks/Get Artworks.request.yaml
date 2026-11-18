@@ -1,5 +1,7 @@
 $kind: http-request
-name: Get Artworks
+queryParams:
+  page: "1"
+  pageSize: "2"
 order: 2000
 method: GET
-url: '{{baseUrl}}/api/artworks'
+url: "{{baseUrl}}/api/artworks?page=1&pageSize=2"

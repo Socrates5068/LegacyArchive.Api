@@ -7,7 +7,6 @@ public static class ArtworkRules
     public const int TitleMaxLength = 200;
     public const int DescriptionMaxLength = 2000;
     public const int YearMinValue = 1950;
-    public const int YearMaxValue = 3000;
 
 
     public static IRuleBuilderOptions<T, string> ValidTitle<T>(

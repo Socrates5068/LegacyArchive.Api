@@ -8,7 +8,9 @@ public interface IArtworkRepository
 
     Task<Artwork?> GetByIdAsync(Guid id);
 
-    Task<List<Artwork>> GetAllAsync();
+    Task<(List<Artwork> Items, int TotalCount)> GetPagedAsync(int page, int pageSize);
+
     Task UpdateAsync(Artwork artwork);
+
     Task DeleteAsync(Artwork artwork);
 }

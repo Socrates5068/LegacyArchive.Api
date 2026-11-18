@@ -1,5 +1,6 @@
 ﻿using LegacyArchive.Application.Interfaces;
 using LegacyArchive.Domain.Entities;
+using LegacyArchive.Infrastructure.Extensions;
 using LegacyArchive.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,11 +32,20 @@ public class ArtworkRepository : IArtworkRepository
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<Artwork>> GetAllAsync()
+    public async Task<(List<Artwork> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
     {
-        return await _context.Artworks
+        var query = _context.Artworks.AsNoTracking();
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
             .Include(a => a.Category)
+            .OrderByDescending(a => a.CreatedAt)
+            .ThenBy(a => a.Id)
+            .Paginate(page, pageSize)
             .ToListAsync();
+
+        return (items, totalCount);
     }
 
     public async Task UpdateAsync(Artwork artwork)

@@ -14,17 +14,20 @@ public class ArtworkService : IArtworkService
     private readonly ICategoryRepository _categoryRepository;
     private readonly IValidator<CreateArtworkRequest> _createValidator;
     private readonly IValidator<UpdateArtworkRequest> _updateValidator;
+    private readonly IValidator<PaginationQuery> _paginationValidator;
 
     public ArtworkService(
         IArtworkRepository repository,
         ICategoryRepository categoryRepository,
         IValidator<CreateArtworkRequest> createValidator,
-        IValidator<UpdateArtworkRequest> updateValidator)
+        IValidator<UpdateArtworkRequest> updateValidator,
+        IValidator<PaginationQuery> paginationValidator)
     {
         _repository = repository;
         _categoryRepository = categoryRepository;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
+        _paginationValidator = paginationValidator;
     }
 
     public async Task<ArtworkResponse> CreateAsync(
@@ -61,11 +64,19 @@ public class ArtworkService : IArtworkService
         return artwork?.ToResponse();
     }
 
-    public async Task<List<ArtworkResponse>> GetAllAsync()
+    public async Task<PagedResponse<ArtworkResponse>> GetAllAsync(PaginationQuery query)
     {
-        var artworks = await _repository.GetAllAsync();
+        await _paginationValidator.ValidateAndThrowAsync(query);
 
-        return artworks.Select(a => a.ToResponse()).ToList();
+        var (items, totalCount) = await _repository.GetPagedAsync(query.Page, query.PageSize);
+
+        return new PagedResponse<ArtworkResponse>
+        {
+            Items = items.Select(a => a.ToResponse()).ToList(),
+            Page = query.Page,
+            PageSize = query.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<ArtworkResponse> UpdateAsync(Guid id, UpdateArtworkRequest request)
