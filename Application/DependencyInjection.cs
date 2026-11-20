@@ -12,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IArtworkService, ArtworkService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IMediaService, MediaService>();
         services.AddValidatorsFromAssemblyContaining<CreateArtworkRequestValidator>();
 
         return services;

@@ -13,4 +13,6 @@ public interface IArtworkRepository
     Task UpdateAsync(Artwork artwork);
 
     Task DeleteAsync(Artwork artwork);
+
+    Task<bool> ExistsAsync(Guid id);
 }

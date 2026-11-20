@@ -372,3 +372,5 @@ obj/
 # Ignore appsettings files
 appsettings.Development.json
 secrets.json
+
+.postman/test-files/

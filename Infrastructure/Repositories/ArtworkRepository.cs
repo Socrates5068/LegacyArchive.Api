@@ -3,6 +3,7 @@ using LegacyArchive.Domain.Entities;
 using LegacyArchive.Infrastructure.Extensions;
 using LegacyArchive.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 
 namespace LegacyArchive.Infrastructure.Repositories;
@@ -57,5 +58,11 @@ public class ArtworkRepository : IArtworkRepository
     {
         _context.Artworks.Remove(artwork);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _context.Artworks
+           .AnyAsync(a => a.Id == id);
     }
 }

@@ -68,6 +68,48 @@ namespace LegacyArchive.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("LegacyArchive.Domain.Entities.MediaFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ArtworkId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StoragePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtworkId");
+
+                    b.ToTable("MediaFiles");
+                });
+
             modelBuilder.Entity("LegacyArchive.Domain.Entities.Artwork", b =>
                 {
                     b.HasOne("LegacyArchive.Domain.Entities.Category", "Category")
@@ -77,6 +119,22 @@ namespace LegacyArchive.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("LegacyArchive.Domain.Entities.MediaFile", b =>
+                {
+                    b.HasOne("LegacyArchive.Domain.Entities.Artwork", "Artwork")
+                        .WithMany("MediaFiles")
+                        .HasForeignKey("ArtworkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artwork");
+                });
+
+            modelBuilder.Entity("LegacyArchive.Domain.Entities.Artwork", b =>
+                {
+                    b.Navigation("MediaFiles");
                 });
 
             modelBuilder.Entity("LegacyArchive.Domain.Entities.Category", b =>

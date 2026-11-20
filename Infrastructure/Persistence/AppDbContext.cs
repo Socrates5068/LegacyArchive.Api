@@ -24,10 +24,28 @@ public class AppDbContext : DbContext
             .HasForeignKey(a => a.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<MediaFile>(entity =>
+        {
+            entity.Property(m => m.OriginalFileName).HasMaxLength(255);
+            entity.Property(m => m.StoragePath).HasMaxLength(500);
+            entity.Property(m => m.ContentType).HasMaxLength(100);
+
+            entity.Property(m => m.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
+
+            entity.HasOne(m => m.Artwork)
+                .WithMany(a => a.MediaFiles)
+                .HasForeignKey(m => m.ArtworkId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Artwork> Artworks => Set<Artwork>();
 
     public DbSet<Category> Categories => Set<Category>();
+
+    public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
 }

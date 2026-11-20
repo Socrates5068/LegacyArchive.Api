@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LegacyArchive.Domain.Entities;
+﻿namespace LegacyArchive.Domain.Entities;
 
 public class Artwork
 {
@@ -21,4 +15,6 @@ public class Artwork
     public Guid CategoryId { get; set; }
 
     public Category Category { get; set; } = null!;
+
+    public ICollection<MediaFile> MediaFiles { get; set; } = new List<MediaFile>();
 }

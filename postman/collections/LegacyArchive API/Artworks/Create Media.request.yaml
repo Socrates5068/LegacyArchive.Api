@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/artworks/01a1bcf3-b871-7bc1-810e-e905ff53d65b/media"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: file
+      key: ""
+      src:
+        - /D:/Descargas/84351608_127943892073774_8865265557864185856_o.jpg
+      description: ""
+      disabled: false
+order: 6000
