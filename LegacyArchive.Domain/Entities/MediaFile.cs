@@ -8,6 +8,14 @@ public class MediaFile
 
     public string StoragePath { get; set; } = string.Empty;
 
+    public string ThumbnailPath { get; set; } = string.Empty;
+
+    public string PreviewPath { get; set; } = string.Empty;
+
+    public int Width { get; set; }
+
+    public int Height { get; set; }
+
     public string ContentType { get; set; } = string.Empty;
 
     public long FileSize { get; set; }

@@ -44,4 +44,15 @@ public class LocalFileStorage : IFileStorage
 
         return fullPath;
     }
+
+    public Task<Stream> OpenReadAsync(string relativePath, CancellationToken cancellationToken = default)
+    {
+        var fullPath = GetSafeFullPath(relativePath);
+
+        Stream stream = new FileStream(
+            fullPath, FileMode.Open, FileAccess.Read, FileShare.Read,
+            bufferSize: 81920, useAsync: true);
+
+        return Task.FromResult(stream);
+    }
 }

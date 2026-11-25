@@ -6,6 +6,10 @@ public class MediaFileResponse
 
     public string OriginalFileName { get; set; } = string.Empty;
 
+    public int Width { get; set; }
+
+    public int Height { get; set; }
+
     public string ContentType { get; set; } = string.Empty;
 
     public long SizeBytes { get; set; }

@@ -3,9 +3,10 @@ using LegacyArchive.Application.DTOs;
 using LegacyArchive.Application.DTOs.Responses;
 using LegacyArchive.Application.Exceptions;
 using LegacyArchive.Application.Interfaces;
+using LegacyArchive.Application.Mappings;
+using LegacyArchive.Application.Models;
 using LegacyArchive.Application.Validators.Rules;
 using LegacyArchive.Domain.Entities;
-using LegacyArchive.Application.Mappings;
 
 namespace LegacyArchive.Application.Services;
 
@@ -15,16 +16,19 @@ public class MediaService : IMediaService
     private readonly IArtworkRepository _artworkRepository;
     private readonly IFileStorage _fileStorage;
     private readonly IMediaFileRepository _mediaRepository;
+    private readonly IImageProcessor _imageProcessor;
 
     public MediaService(IValidator<UploadMediaRequest> validator,
         IArtworkRepository artworkRepository,
         IFileStorage fileStorage,
-        IMediaFileRepository mediaRepository)
+        IMediaFileRepository mediaRepository,
+        IImageProcessor imageProcessor)
     {
         _validator = validator;
         _artworkRepository = artworkRepository;
         _fileStorage = fileStorage;
         _mediaRepository = mediaRepository;
+        _imageProcessor = imageProcessor;   
     }
 
     public async Task<MediaFileResponse> UploadAsync(
@@ -35,31 +39,58 @@ public class MediaService : IMediaService
         if (!await _artworkRepository.ExistsAsync(artworkId))
             throw new ArtworkNotFoundException(artworkId);
 
+        var mediaId = Guid.NewGuid();
+        var folder = $"artworks/{artworkId}/{mediaId}";
         var extension = Path.GetExtension(request.FileName).ToLowerInvariant();
-        var storagePath = $"artworks/{artworkId}/{Guid.NewGuid()}{extension}";
 
-        await _fileStorage.SaveAsync(request.Content, storagePath, cancellationToken);
+        var originalPath = $"{folder}/original{extension}";
+        var thumbnailPath = $"{folder}/thumbnail.webp";
+        var previewPath = $"{folder}/preview.webp";
 
-        var media = new MediaFile
-        {
-            ArtworkId = artworkId,
-            OriginalFileName = Path.GetFileName(request.FileName),
-            StoragePath = storagePath,
-            ContentType = MediaRules.AllowedExtensions[extension],
-            FileSize = request.Length,
-            SortOrder = await _mediaRepository.GetNextSortOrderAsync(artworkId)
-        };
+        var savedPaths = new List<string>();
 
         try
         {
+            savedPaths.Add(originalPath);
+            await _fileStorage.SaveAsync(request.Content, originalPath, cancellationToken);
+
+            ImageProcessingResult processed;
+            await using (var original = await _fileStorage.OpenReadAsync(originalPath, cancellationToken))
+            {
+                processed = await _imageProcessor.ProcessAsync(original, cancellationToken);
+            }
+
+            savedPaths.Add(thumbnailPath);
+            await _fileStorage.SaveAsync(new MemoryStream(processed.Thumbnail), thumbnailPath, cancellationToken);
+
+            savedPaths.Add(previewPath);
+            await _fileStorage.SaveAsync(new MemoryStream(processed.Preview), previewPath, cancellationToken);
+
+            var media = new MediaFile
+            {
+                Id = mediaId,
+                ArtworkId = artworkId,
+                OriginalFileName = Path.GetFileName(request.FileName),
+                StoragePath = originalPath,
+                ThumbnailPath = thumbnailPath,
+                PreviewPath = previewPath,
+                ContentType = MediaRules.AllowedExtensions[extension],
+                FileSize = request.Length,
+                Width = processed.Width,
+                Height = processed.Height,
+                SortOrder = await _mediaRepository.GetNextSortOrderAsync(artworkId)
+            };
+
             await _mediaRepository.AddAsync(media);
+
+            return media.ToResponse();
         }
         catch
         {
-            await _fileStorage.DeleteAsync(storagePath);
+            foreach (var path in savedPaths)
+                await _fileStorage.DeleteAsync(path);
+
             throw;
         }
-
-        return media.ToResponse();
     }
 }

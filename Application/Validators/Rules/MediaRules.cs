@@ -6,6 +6,9 @@ public static class MediaRules
 {
     public const int MaxFileSizeMb = 100;
     public const long MaxFileSizeBytes = MaxFileSizeMb * 1024L * 1024L;
+    public const int ThumbnailMaxSize = 400;
+    public const int PreviewMaxSize = 1600;
+    public const long MaxPixels = 150_000_000;
 
     public static readonly IReadOnlyDictionary<string, string> AllowedExtensions =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

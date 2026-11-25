@@ -65,6 +65,9 @@ public class ExceptionMiddleware
             CategoryInUseException =>
                 StatusCodes.Status409Conflict,
 
+            InvalidImageException =>
+                StatusCodes.Status404NotFound,
+
             _ =>
                 StatusCodes.Status500InternalServerError
         };

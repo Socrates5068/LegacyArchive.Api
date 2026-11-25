@@ -9,6 +9,8 @@ public static class MediaFileMappings
     {
         Id = mediaFile.Id,
         OriginalFileName = mediaFile.OriginalFileName,
+        Width = mediaFile.Width,
+        Height = mediaFile.Height,
         ContentType = mediaFile.ContentType,
         SortOrder = mediaFile.SortOrder,
         SizeBytes = mediaFile.FileSize,

@@ -1,4 +1,5 @@
 ﻿using LegacyArchive.Application.Interfaces;
+using LegacyArchive.Infrastructure.Imaging;
 using LegacyArchive.Infrastructure.Persistence;
 using LegacyArchive.Infrastructure.Repositories;
 using LegacyArchive.Infrastructure.Storage;
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IMediaFileRepository, MediaFileRepository>();
         services.Configure<FileStorageOptions>(configuration.GetSection(FileStorageOptions.SectionName));
         services.AddSingleton<IFileStorage, LocalFileStorage>();
+        services.AddSingleton<IImageProcessor, ImageSharpProcessor>();
 
         return services;
     }

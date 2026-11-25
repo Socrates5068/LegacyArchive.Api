@@ -1,13 +1,13 @@
 $kind: http-request
-url: "{{baseUrl}}/api/artworks/01a1bcf3-b871-7bc1-810e-e905ff53d65b/media"
+url: "{{baseUrl}}/api/artworks/01a1fad5-ac74-73f9-bc95-9b20d4919ef1/media"
 method: POST
 body:
   type: formdata
   content:
     - type: file
-      key: ""
+      key: file
       src:
-        - /D:/Descargas/84351608_127943892073774_8865265557864185856_o.jpg
+        - /D:/Socrates/Documents/Visual Studio/LegacyArchive.Api/.postman/test-files/huge.jpg
       description: ""
       disabled: false
 order: 6000

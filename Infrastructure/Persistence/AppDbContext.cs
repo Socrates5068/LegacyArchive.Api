@@ -28,6 +28,10 @@ public class AppDbContext : DbContext
         {
             entity.Property(m => m.OriginalFileName).HasMaxLength(255);
             entity.Property(m => m.StoragePath).HasMaxLength(500);
+            entity.Property(m => m.ThumbnailPath).HasMaxLength(500);
+            entity.Property(m => m.PreviewPath).HasMaxLength(500);
+            entity.Property(m => m.Width);
+            entity.Property(m => m.Height);
             entity.Property(m => m.ContentType).HasMaxLength(100);
 
             entity.Property(m => m.CreatedAt)
