@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/artworks/01a1fad5-ac74-73f9-bc95-9b20d4919ef1/media"
+method: GET
+headers:
+  - key: Range
+    value: bytes=0-99
+    disabled: true
+    description: ""
+order: 1000

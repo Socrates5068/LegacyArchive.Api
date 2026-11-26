@@ -11,6 +11,10 @@ public static class ArtworkMappings
         Title = artwork.Title,
         Description = artwork.Description,
         Year = artwork.Year,
+        CoverThumbnailUrl = artwork.MediaFiles
+            .OrderBy(m => m.SortOrder)
+            .FirstOrDefault()
+            ?.GetThumbnailUrl(),
         CreatedAt = artwork.CreatedAt,
         Category = artwork.Category.ToDto()
     };

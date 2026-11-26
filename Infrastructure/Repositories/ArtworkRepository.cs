@@ -3,8 +3,6 @@ using LegacyArchive.Domain.Entities;
 using LegacyArchive.Infrastructure.Extensions;
 using LegacyArchive.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
-
 
 namespace LegacyArchive.Infrastructure.Repositories;
 
@@ -30,6 +28,7 @@ public class ArtworkRepository : IArtworkRepository
     {
         return await _context.Artworks
             .Include(a => a.Category)
+            .Include(a => a.MediaFiles.OrderBy(m => m.SortOrder).Take(1))
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -41,6 +40,7 @@ public class ArtworkRepository : IArtworkRepository
 
         var items = await query
             .Include(a => a.Category)
+            .Include(a => a.MediaFiles.OrderBy(m => m.SortOrder).Take(1))
             .OrderByDescending(a => a.CreatedAt)
             .ThenBy(a => a.Id)
             .Paginate(page, pageSize)

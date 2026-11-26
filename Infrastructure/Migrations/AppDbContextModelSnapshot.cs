@@ -121,7 +121,7 @@ namespace LegacyArchive.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArtworkId");
+                    b.HasIndex("ArtworkId", "SortOrder");
 
                     b.ToTable("MediaFiles");
                 });

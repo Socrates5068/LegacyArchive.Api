@@ -67,6 +67,9 @@ public class ExceptionMiddleware
 
             InvalidImageException =>
                 StatusCodes.Status404NotFound,
+            
+            MediaFileNotFoundException =>
+                StatusCodes.Status404NotFound,
 
             _ =>
                 StatusCodes.Status500InternalServerError

@@ -93,4 +93,36 @@ public class MediaService : IMediaService
             throw;
         }
     }
+
+    public async Task<List<MediaFileResponse>> GetByArtworkAsync(
+    Guid artworkId, CancellationToken cancellationToken = default)
+    {
+        if (!await _artworkRepository.ExistsAsync(artworkId))
+            throw new ArtworkNotFoundException(artworkId);
+
+        var mediaFiles = await _mediaRepository.GetByArtworkIdAsync(artworkId);
+
+        return mediaFiles.Select(m => m.ToResponse()).ToList();
+    }
+
+    public async Task<MediaContent> GetContentAsync(
+        Guid artworkId, Guid mediaId, MediaVariant variant, CancellationToken cancellationToken = default)
+    {
+        var media = await _mediaRepository.GetByIdAsync(mediaId);
+
+        if (media is null || media.ArtworkId != artworkId)
+            throw new MediaFileNotFoundException(mediaId);
+
+        var (path, contentType, fileName) = variant switch
+        {
+            MediaVariant.Original => (media.StoragePath, media.ContentType, media.OriginalFileName),
+            MediaVariant.Preview => (media.PreviewPath, "image/webp", $"{Path.GetFileNameWithoutExtension(media.OriginalFileName)}-preview.webp"),
+            MediaVariant.Thumbnail => (media.ThumbnailPath, "image/webp", $"{Path.GetFileNameWithoutExtension(media.OriginalFileName)}-thumbnail.webp"),
+            _ => throw new MediaFileNotFoundException(mediaId)
+        };
+
+        var stream = await _fileStorage.OpenReadAsync(path, cancellationToken);
+
+        return new MediaContent(stream, contentType, fileName);
+    }
 }

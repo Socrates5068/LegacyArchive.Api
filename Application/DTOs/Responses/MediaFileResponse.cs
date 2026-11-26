@@ -15,6 +15,11 @@ public class MediaFileResponse
     public long SizeBytes { get; set; }
 
     public int SortOrder { get; set; }
+    public string ThumbnailUrl { get; set; } = string.Empty;
+
+    public string PreviewUrl { get; set; } = string.Empty;
+
+    public string OriginalUrl { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
 }

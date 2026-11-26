@@ -42,6 +42,8 @@ public class AppDbContext : DbContext
                 .WithMany(a => a.MediaFiles)
                 .HasForeignKey(m => m.ArtworkId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(m => new { m.ArtworkId, m.SortOrder });
         });
 
         base.OnModelCreating(modelBuilder);

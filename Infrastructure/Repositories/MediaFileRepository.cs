@@ -23,6 +23,22 @@ public class MediaFileRepository : IMediaFileRepository
         return mediaFile;
     }
 
+    public async Task<List<MediaFile>> GetByArtworkIdAsync(Guid artworkId)
+    {
+        var query = _context.MediaFiles.AsNoTracking();
+
+        return await query
+            .Where(m => m.ArtworkId == artworkId)
+            .OrderBy(m => m.SortOrder)
+            .ToListAsync();
+    }
+
+    public async Task<MediaFile?> GetByIdAsync(Guid mediaId)
+    {
+        return await _context.MediaFiles
+            .FirstOrDefaultAsync(m => m.Id == mediaId);
+    }
+
     public async Task<int> GetNextSortOrderAsync(Guid artworkId)
     {
         var maxSortOrder = await _context.MediaFiles

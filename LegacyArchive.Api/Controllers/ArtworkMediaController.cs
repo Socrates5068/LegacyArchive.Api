@@ -1,5 +1,6 @@
 ﻿using LegacyArchive.Application.DTOs;
 using LegacyArchive.Application.Interfaces;
+using LegacyArchive.Application.Models;
 using LegacyArchive.Application.Validators.Rules;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,26 @@ public class ArtworkMediaController : ControllerBase
 
         var media = await _mediaService.UploadAsync(artworkId, request, cancellationToken);
 
-        return Created($"/api/artworks/{artworkId}/media/{media.Id}", media);
+        return Created(media.OriginalUrl, media);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll(Guid artworkId, CancellationToken cancellationToken)
+    {
+        var media = await _mediaService.GetByArtworkAsync(artworkId, cancellationToken);
+        return Ok(media);
+    }
+
+    [HttpGet("{mediaId:guid}/{variant}")]
+    public async Task<IActionResult> GetContent(
+        Guid artworkId, Guid mediaId, MediaVariant variant, CancellationToken cancellationToken)
+    {
+        var content = await _mediaService.GetContentAsync(artworkId, mediaId, variant, cancellationToken);
+
+        Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+
+        return variant == MediaVariant.Original
+            ? File(content.Content, content.ContentType, content.FileName, enableRangeProcessing: true)
+            : File(content.Content, content.ContentType, enableRangeProcessing: true);
     }
 }

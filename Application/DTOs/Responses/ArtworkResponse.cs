@@ -10,6 +10,8 @@ public class ArtworkResponse
 
     public int? Year { get; set; }
 
+    public string? CoverThumbnailUrl { get; set; }
+
     public CategoryDto? Category { get; set; }
 
     public DateTime CreatedAt { get; set; }
