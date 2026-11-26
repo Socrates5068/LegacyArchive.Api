@@ -25,16 +25,6 @@ public class LocalFileStorage : IFileStorage
         await content.CopyToAsync(fileStream, cancellationToken);
     }
 
-    public Task DeleteAsync(string relativePath)
-    {
-        var fullPath = GetSafeFullPath(relativePath);
-
-        if (File.Exists(fullPath))
-            File.Delete(fullPath);
-
-        return Task.CompletedTask;
-    }
-
     private string GetSafeFullPath(string relativePath)
     {
         var fullPath = Path.GetFullPath(Path.Combine(_rootPath, relativePath));
@@ -54,5 +44,15 @@ public class LocalFileStorage : IFileStorage
             bufferSize: 81920, useAsync: true);
 
         return Task.FromResult(stream);
+    }
+
+    public Task DeleteFolderAsync(string relativePath)
+    {
+        var fullPath = GetSafeFullPath(relativePath);
+
+        if (Directory.Exists(fullPath))
+            Directory.Delete(fullPath, recursive: true);
+
+        return Task.CompletedTask;
     }
 }

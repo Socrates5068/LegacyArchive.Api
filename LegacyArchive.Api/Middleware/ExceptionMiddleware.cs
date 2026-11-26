@@ -66,10 +66,13 @@ public class ExceptionMiddleware
                 StatusCodes.Status409Conflict,
 
             InvalidImageException =>
-                StatusCodes.Status404NotFound,
+                StatusCodes.Status400BadRequest,
             
             MediaFileNotFoundException =>
                 StatusCodes.Status404NotFound,
+
+            InvalidMediaOrderException =>
+                StatusCodes.Status400BadRequest,
 
             _ =>
                 StatusCodes.Status500InternalServerError

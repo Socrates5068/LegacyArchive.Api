@@ -7,7 +7,8 @@ body:
     - type: file
       key: file
       src:
-        - /D:/Socrates/Documents/Visual Studio/LegacyArchive.Api/.postman/test-files/IMG_20261121_201921.jpg
+        - /D:/Socrates/Documents/Visual
+          Studio/LegacyArchive.Api/.postman/test-files/IMG_20261121_201921.jpg
       description: ""
       disabled: false
-order: 2000
+order: 3000

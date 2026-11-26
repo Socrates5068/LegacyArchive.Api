@@ -11,4 +11,10 @@ public interface IMediaFileRepository
     Task<MediaFile?> GetByIdAsync(Guid mediaId);
 
     Task<List<MediaFile>> GetByArtworkIdAsync(Guid artworkId);
+
+    Task DeleteAsync(MediaFile media);
+
+    Task<List<MediaFile>> GetByArtworkIdForUpdateAsync(Guid artworkId);
+
+    Task UpdateRangeAsync(IEnumerable<MediaFile> mediaFiles);
 }

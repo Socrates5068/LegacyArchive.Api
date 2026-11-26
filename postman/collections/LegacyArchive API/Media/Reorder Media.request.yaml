@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{baseUrl}}/api/artworks/01a1fad5-ac74-73f9-bc95-9b20d4919ef1/media/order/"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"mediaIds\": [\r
+
+    \    \"2e3bab35-294e-432b-b825-6581ad313b72\",\r
+
+    \    \"7105bd96-4c28-4c12-a6c5-212a22603fb5\",\r
+
+    \    \"bd78b4cd-363b-44b8-b687-61b1d5351d02\",\r
+
+    \    \"ad449cc9-4017-4107-b384-9d243f15ee31\",\r
+
+    \    \"e0c75caa-916e-4a01-8fae-8e441ab6b642\",\r
+
+    \    \"03af1c44-b3e9-419d-8b5f-6a114fad9aea\"\r
+
+    \  ]\r
+
+    }"
+order: 2378

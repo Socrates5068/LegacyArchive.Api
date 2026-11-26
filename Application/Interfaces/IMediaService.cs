@@ -16,4 +16,13 @@ public interface IMediaService
     Task<MediaContent> GetContentAsync(
         Guid artworkId, Guid mediaId, MediaVariant variant,
         CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        Guid artworkId, 
+        Guid mediaId, 
+        CancellationToken cancellationToken = default);
+
+    Task<List<MediaFileResponse>> ReorderAsync(
+        Guid artworkId, ReorderMediaRequest request,
+        CancellationToken cancellationToken = default);
 }

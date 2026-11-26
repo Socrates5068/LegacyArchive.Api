@@ -4,7 +4,9 @@ using LegacyArchive.Application.DTOs.Responses;
 using LegacyArchive.Application.Exceptions;
 using LegacyArchive.Application.Interfaces;
 using LegacyArchive.Application.Mappings;
+using LegacyArchive.Application.Storage;
 using LegacyArchive.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace LegacyArchive.Application.Services;
 
@@ -15,19 +17,25 @@ public class ArtworkService : IArtworkService
     private readonly IValidator<CreateArtworkRequest> _createValidator;
     private readonly IValidator<UpdateArtworkRequest> _updateValidator;
     private readonly IValidator<PaginationQuery> _paginationValidator;
+    private readonly IFileStorage _fileStorage;
+    private readonly ILogger<ArtworkService> _logger;
 
     public ArtworkService(
         IArtworkRepository repository,
         ICategoryRepository categoryRepository,
         IValidator<CreateArtworkRequest> createValidator,
         IValidator<UpdateArtworkRequest> updateValidator,
-        IValidator<PaginationQuery> paginationValidator)
+        IValidator<PaginationQuery> paginationValidator,
+        IFileStorage fileStorage,
+        ILogger<ArtworkService> logger)
     {
         _repository = repository;
         _categoryRepository = categoryRepository;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
         _paginationValidator = paginationValidator;
+        _fileStorage = fileStorage;
+        _logger = logger;   
     }
 
     public async Task<ArtworkResponse> CreateAsync(
@@ -110,6 +118,21 @@ public class ArtworkService : IArtworkService
         var artwork = await _repository.GetByIdAsync(id)
             ?? throw new ArtworkNotFoundException(id);
 
+        // 1. Base de datos: borra la obra, y el Cascade borra sus MediaFiles
         await _repository.DeleteAsync(artwork);
+
+        // 2. Disco: una sola carpeta con todos los escaneos de la obra
+        var folder = MediaPaths.GetArtworkFolder(id);
+
+        try
+        {
+            await _fileStorage.DeleteFolderAsync(folder);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex,
+                "Artwork {ArtworkId} was deleted from the database but its folder {Folder} could not be removed.",
+                id, folder);
+        }
     }
 }

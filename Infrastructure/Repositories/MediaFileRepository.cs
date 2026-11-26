@@ -47,4 +47,22 @@ public class MediaFileRepository : IMediaFileRepository
 
         return (maxSortOrder ?? 0) + 1;
     }
+
+    public async Task DeleteAsync(MediaFile media)
+    {
+        _context.MediaFiles.Remove(media);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<MediaFile>> GetByArtworkIdForUpdateAsync(Guid artworkId)
+    {
+        return await _context.MediaFiles
+            .Where(m => m.ArtworkId == artworkId)
+            .ToListAsync();
+    }
+
+    public async Task UpdateRangeAsync(IEnumerable<MediaFile> mediaFiles)
+    {
+        await _context.SaveChangesAsync();
+    }
 }

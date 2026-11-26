@@ -56,4 +56,19 @@ public class ArtworkMediaController : ControllerBase
             ? File(content.Content, content.ContentType, content.FileName, enableRangeProcessing: true)
             : File(content.Content, content.ContentType, enableRangeProcessing: true);
     }
+
+    [HttpDelete("{mediaId:guid}")]
+    public async Task<IActionResult> Delete(Guid artworkId, Guid mediaId, CancellationToken cancellationToken)
+    {
+        await _mediaService.DeleteAsync(artworkId, mediaId, cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPut("order")]
+    public async Task<IActionResult> Reorder(
+    Guid artworkId, ReorderMediaRequest request, CancellationToken cancellationToken)
+    {
+        var media = await _mediaService.ReorderAsync(artworkId, request, cancellationToken);
+        return Ok(media);
+    }
 }
