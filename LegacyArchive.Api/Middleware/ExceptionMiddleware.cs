@@ -74,6 +74,9 @@ public class ExceptionMiddleware
             InvalidMediaOrderException =>
                 StatusCodes.Status400BadRequest,
 
+            InvalidCredentialsException =>
+                StatusCodes.Status401Unauthorized,
+
             _ =>
                 StatusCodes.Status500InternalServerError
         };

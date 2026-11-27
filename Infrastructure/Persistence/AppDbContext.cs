@@ -1,9 +1,12 @@
 ﻿using LegacyArchive.Domain.Entities;
+using LegacyArchive.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LegacyArchive.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public AppDbContext(
         DbContextOptions<AppDbContext> options)
@@ -13,6 +16,8 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Artwork>()
             .Property(a => a.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -45,8 +50,6 @@ public class AppDbContext : DbContext
 
             entity.HasIndex(m => new { m.ArtworkId, m.SortOrder });
         });
-
-        base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Artwork> Artworks => Set<Artwork>();

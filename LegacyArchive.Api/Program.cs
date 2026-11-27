@@ -1,12 +1,13 @@
 using LegacyArchive.Api.Middleware;
 using LegacyArchive.Application;
 using LegacyArchive.Infrastructure;
+using LegacyArchive.Infrastructure.Identity;
 
 namespace LegacyArchive.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ namespace LegacyArchive.Api
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
+
+            await app.Services.SeedIdentityAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -35,7 +38,7 @@ namespace LegacyArchive.Api
 
             app.MapControllers();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
